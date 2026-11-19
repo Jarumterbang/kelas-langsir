@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Terima Kasih</title>
+
+  <script>
+  /* ================= TUKAR DI SINI ================= */
+
+  // Link WhatsApp tujuan (pilih satu format dan tampal di bawah):
+  //   Group WhatsApp: https://chat.whatsapp.com/GNHWHNJflRT39hZQAfvYe8
+
+  // Masa tunggu selepas Pixel siap dimuat, supaya Lead sempat dihantar.
+  // Dalam milisaat: 500 = setengah saat, 0 = terus (risiko Lead tidak sempat dihantar).
+  var TUNGGU_SELEPAS_PIXEL = 500;
+
+  /* ================================================== */
+  </script>
+
+  <!-- Meta Pixel Code + pengalihan ke WhatsApp -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '734123931975984');
+  fbq('track', 'PageView');
+  fbq('track', 'Lead');
+  fbq('track', 'CompleteRegistration');
+
+  // Alih ke WhatsApp sebaik sahaja Pixel siap dimuat dan menghantar acara.
+  (function () {
+    var sudahAlih = false;
+
+    function alih() {
+      if (sudahAlih) return;
+      sudahAlih = true;
+      // replace: halaman ini tidak tinggal dalam sejarah, jadi butang Back tidak berpusing semula ke sini
+      window.location.replace(https://chat.whatsapp.com/GNHWHNJflRT39hZQAfvYe8);
+    }
+
+    var px = document.querySelector('script[src*="fbevents.js"]');
+    if (px) {
+      px.addEventListener('load', function () { setTimeout(alih, TUNGGU_SELEPAS_PIXEL); });
+      px.addEventListener('error', alih); // Pixel disekat (contoh ad blocker): terus alih
+    }
+    setTimeout(alih, 4000); // jaring keselamatan jika Pixel terlalu lambat
+
+    // Pautan manual jika pengalihan automatik gagal
+    document.addEventListener('DOMContentLoaded', function () {
+      var a = document.getElementById('pautan');
+      if (a) a.href = https://chat.whatsapp.com/GNHWHNJflRT39hZQAfvYe8;
+    });
+  })();
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=734123931975984&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Meta Pixel Code -->
+
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #fff;
+           font-family: "Open Sans", Arial, sans-serif; color: #222; text-align: center; padding: 20px; }
+    h1 { font-size: 24px; margin: 0 0 8px; }
+    p { margin: 6px 0; }
+    a { color: #0b5ed7; }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>Terima kasih!</h1>
+    <p>Pendaftaran anda berjaya. Anda sedang dialihkan ke WhatsApp&hellip;</p>
+    <p><a id="pautan" href="#">Klik di sini jika tidak dialihkan</a></p>
+  </div>
+</body>
+</html>
