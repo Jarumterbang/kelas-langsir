@@ -9,22 +9,24 @@
   <meta property="og:description" content="Jom daftar kelas langsir percuma secara online! Tawaran terhad!">
 
   <!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '734123931975984');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=734123931975984&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '29685862107767340');
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=29685862107767340&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Meta Pixel Code -->
 
   <style>
     * { box-sizing: border-box; }
@@ -49,6 +51,8 @@ src="https://www.facebook.com/tr?id=734123931975984&ev=PageView&noscript=1"
     button { display: block; margin: 8px auto 0; padding: 13px 40px; font-size: 18px; font-weight: 600;
              background: #0b5ed7; color: #fff; border: 0; border-radius: 6px; cursor: pointer; }
     button:hover { background: #094db0; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .status { color: #d9534f; text-align: center; margin: 14px 0 0; }
     .hp { position: absolute; left: -9999px; }
   </style>
 </head>
@@ -76,11 +80,9 @@ src="https://www.facebook.com/tr?id=734123931975984&ev=PageView&noscript=1"
 
     <!-- Borang -->
     <div class="card" id="borang">
-      <form class="form-body" action="https://api.web3forms.com/submit" method="POST">
+      <form id="borang-daftar" class="form-body" action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="1f069427-a57f-4239-970e-dcc256463316">
         <input type="hidden" name="subject" value="Pendaftaran Kelas Jahit Langsir">
-        <input type="hidden" name="redirect" value="https://
-kelas.jarumterbang.com/terima-kasih.html">
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
 
         <div class="alert"><b>Perhatian!</b> Sila lengkapkan borang di bawah.</div>
@@ -140,9 +142,52 @@ kelas.jarumterbang.com/terima-kasih.html">
         <hr>
 
         <button type="submit">Hantar &rsaquo;</button>
+        <p id="status" class="status" role="alert"></p>
       </form>
     </div>
 
   </div>
+
+  <script>
+  // Hantar borang ke Web3Forms tanpa meninggalkan halaman, kemudian terus ke
+  // halaman terima kasih (halaman itu menghantar Lead ke Pixel dan beralih ke WhatsApp).
+  (function () {
+    var borang = document.getElementById('borang-daftar');
+    var butang = borang.querySelector('button[type="submit"]');
+    var ruangStatus = document.getElementById('status');
+    var teksAsal = butang.innerHTML;
+
+    borang.addEventListener('submit', function (e) {
+      e.preventDefault();
+      butang.disabled = true;
+      butang.textContent = 'Menghantar...';
+      ruangStatus.textContent = '';
+
+      var data = Object.fromEntries(new FormData(borang));
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (hasil) {
+          if (hasil && hasil.success) {
+            window.location.href = 'terima-kasih.html';
+          } else {
+            throw new Error((hasil && (hasil.message || (hasil.body && hasil.body.message) || hasil.error)) || 'Ralat tidak diketahui');
+          }
+        })
+        .catch(function (err) {
+          var sebab = (err && err.name === 'TypeError')
+            ? 'Sambungan gagal. Semak internet anda'
+            : ((err && err.message) || 'Ralat tidak diketahui');
+          ruangStatus.textContent = 'Maaf, borang tidak berjaya dihantar (' + sebab + '). Sila cuba lagi.';
+          butang.disabled = false;
+          butang.innerHTML = teksAsal;
+        });
+    });
+  })();
+  </script>
 </body>
 </html>
