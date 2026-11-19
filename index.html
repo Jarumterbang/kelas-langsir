@@ -157,6 +157,26 @@
     var ruangStatus = document.getElementById('status');
     var teksAsal = butang.innerHTML;
 
+    // Alamat Google Apps Script untuk simpan pendaftaran dalam Google Sheet.
+    // Tampal alamat (berakhir /exec) di antara tanda petikan. Jika belum sedia, biarkan seperti ini.
+    var URL_SHEET = "https://script.google.com/macros/s/AKfycbyLzvSAN2xUAszvyXb--K3kpVebAzctEm_5buLe711cyTmnX78K-JNBUtqTMHliRfJD/exec";
+
+    function hantarSheet(data) {
+      if (URL_SHEET.indexOf('https://') !== 0) return Promise.resolve();
+      var salinan = Object.assign({}, data);
+      delete salinan.access_key;
+      delete salinan.botcheck;
+      var hantar = fetch(URL_SHEET, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(salinan)
+      }).catch(function () {});
+      var had = new Promise(function (selesai) { setTimeout(selesai, 5000); });
+      return Promise.race([hantar, had]);
+    }
+
     borang.addEventListener('submit', function (e) {
       e.preventDefault();
       butang.disabled = true;
@@ -164,6 +184,7 @@
       ruangStatus.textContent = '';
 
       var data = Object.fromEntries(new FormData(borang));
+      var simpan = hantarSheet(data); // berjalan serentak dengan Web3Forms
 
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -173,7 +194,8 @@
         .then(function (res) { return res.json(); })
         .then(function (hasil) {
           if (hasil && hasil.success) {
-            window.location.href = 'terima-kasih.html';
+            // tunggu simpanan Sheet siap (maksimum 5 saat) sebelum tinggalkan halaman
+            return simpan.then(function () { window.location.href = 'terima-kasih.html'; });
           } else {
             throw new Error((hasil && (hasil.message || (hasil.body && hasil.body.message) || hasil.error)) || 'Ralat tidak diketahui');
           }
