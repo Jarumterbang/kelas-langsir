@@ -3,12 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kelas Jahit Langsir Percuma</title>
-  <meta name="description" content="Jom daftar kelas langsir percuma secara online! Tawaran terhad!">
-  <meta property="og:title" content="Kelas Jahit Langsir Percuma">
-  <meta property="og:description" content="Jom daftar kelas langsir percuma secara online! Tawaran terhad!">
+  <meta name="robots" content="noindex">
+  <title>Terima Kasih</title>
 
-  <!-- Meta Pixel Code -->
+  <script>
+  /* ================= TUKAR DI SINI ================= */
+
+  // Link WhatsApp tujuan (pilih satu format dan tampal di bawah):
+  //   Nombor        : https://wa.me/60123456789
+  //                   (format antarabangsa: tanpa +, tanpa 0 di depan. 012-345 6789 jadi 60123456789)
+  //   Nombor + mesej: https://wa.me/60123456789?text=Hai%20saya%20dah%20daftar
+  //   Group WhatsApp: https://chat.whatsapp.com/KOD_GROUP_ANDA
+  var LINK_WHATSAPP = "https://chat.whatsapp.com/GNHWHNJflRT39hZQAfvYe8";
+
+  // Masa tunggu selepas Pixel siap dimuat, supaya Lead sempat dihantar.
+  // Dalam milisaat: 500 = setengah saat, 0 = terus (risiko Lead tidak sempat dihantar).
+  var TUNGGU_SELEPAS_PIXEL = 500;
+
+  /* ================================================== */
+  </script>
+
+  <!-- Meta Pixel Code + pengalihan ke WhatsApp -->
   <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -20,7 +35,33 @@
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '29685862107767340');
   fbq('track', 'PageView');
-  fbq('track', 'ViewContent');
+  fbq('track', 'Lead');
+  fbq('track', 'CompleteRegistration');
+
+  // Alih ke WhatsApp sebaik sahaja Pixel siap dimuat dan menghantar acara.
+  (function () {
+    var sudahAlih = false;
+
+    function alih() {
+      if (sudahAlih) return;
+      sudahAlih = true;
+      // replace: halaman ini tidak tinggal dalam sejarah, jadi butang Back tidak berpusing semula ke sini
+      window.location.replace(LINK_WHATSAPP);
+    }
+
+    var px = document.querySelector('script[src*="fbevents.js"]');
+    if (px) {
+      px.addEventListener('load', function () { setTimeout(alih, TUNGGU_SELEPAS_PIXEL); });
+      px.addEventListener('error', alih); // Pixel disekat (contoh ad blocker): terus alih
+    }
+    setTimeout(alih, 4000); // jaring keselamatan jika Pixel terlalu lambat
+
+    // Pautan manual jika pengalihan automatik gagal
+    document.addEventListener('DOMContentLoaded', function () {
+      var a = document.getElementById('pautan');
+      if (a) a.href = LINK_WHATSAPP;
+    });
+  })();
   </script>
   <noscript>
     <img height="1" width="1" style="display:none"
@@ -29,172 +70,18 @@
   <!-- End Meta Pixel Code -->
 
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #f4f6f9; font-family: "Open Sans", Arial, sans-serif; color: #222; }
-    .wrap { max-width: 720px; margin: 0 auto; padding: 0 0 48px; }
-    .card { background: #fff; border: 0; border-radius: 0; box-shadow: none; overflow: hidden; }
-    .card + .card { margin-top: 32px; }
-    .card img { display: block; width: 100%; height: auto; }
-    .form-body { padding: 32px 28px; }
-    .alert { background: #e7f3fe; border: 1px solid #b6dcfb; color: #0c5460; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; }
-    .group { margin-bottom: 18px; }
-    .group > label.title { display: block; font-weight: 600; margin-bottom: 8px; }
-    .group > label.title::after { content: " *"; color: #d9534f; }
-    input[type=text], input[type=email], input[type=tel], select {
-      width: 100%; padding: 11px 12px; font-size: 16px; border: 1px solid #ccd2d9; border-radius: 6px; background: #fff;
-    }
-    input:focus, select:focus { outline: 2px solid #0b5ed7; border-color: #0b5ed7; }
-    .row { display: grid; gap: 10px; }
-    .radio { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer; }
-    .radio input { width: 18px; height: 18px; }
-    hr { border: 0; border-top: 1px solid #e3e6ea; margin: 22px 0; }
-    button { display: block; margin: 8px auto 0; padding: 13px 40px; font-size: 18px; font-weight: 600;
-             background: #0b5ed7; color: #fff; border: 0; border-radius: 6px; cursor: pointer; }
-    button:hover { background: #094db0; }
-    button:disabled { opacity: .6; cursor: wait; }
-    .status { color: #d9534f; text-align: center; margin: 14px 0 0; }
-    .hp { position: absolute; left: -9999px; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #fff;
+           font-family: "Open Sans", Arial, sans-serif; color: #222; text-align: center; padding: 20px; }
+    h1 { font-size: 24px; margin: 0 0 8px; }
+    p { margin: 6px 0; }
+    a { color: #0b5ed7; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-
-    <!-- Bahagian gambar -->
-    <div class="card">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/11-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 1" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/22-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 2" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/31-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 3" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/41-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 4" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/51-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 5" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/71-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 6" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/81-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 7" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/91-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 8" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/101-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 9" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/111-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 10" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/121-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 11" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/131-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 12" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/141-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 13" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/151-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 14" loading="lazy">
-      <img style="width: 100%;" src="https://cdn.onpay.my/users/jarumterbang/media/uploads/161-ko9f-langsir-nov26.jpg" alt="Kelas Jahit Langsir 15" loading="lazy">
-    </div>
-
-    <!-- Borang -->
-    <div class="card" id="borang">
-      <form id="borang-daftar" class="form-body" method="post" action="#">
-        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
-
-        <div class="alert"><b>Perhatian!</b> Sila lengkapkan borang di bawah.</div>
-
-        <div class="group">
-          <input type="text" name="nama" placeholder="Masukkan nama anda..." maxlength="100" required>
-        </div>
-
-        <div class="group">
-          <input type="email" name="emel" placeholder="Masukkan emel anda..." maxlength="100">
-        </div>
-
-        <div class="group row">
-          <select name="kod_dail" id="kod_dail" required>
-            <option value="">Pilih kod dail negara untuk nombor telefon bimbit anda...</option>
-            <option value="60" selected>Malaysia (+60)</option>
-            <option value="65">Singapore (+65)</option>
-            <option value="673">Brunei (+673)</option>
-            <option value="62">Indonesia (+62)</option>
-            <option value="66">Thailand (+66)</option>
-            <option value="63">Philippines (+63)</option>
-            <option value="84">Vietnam (+84)</option>
-            <option value="855">Cambodia (+855)</option>
-            <option value="91">India (+91)</option>
-            <option value="880">Bangladesh (+880)</option>
-            <option value="92">Pakistan (+92)</option>
-            <option value="86">China (+86)</option>
-            <option value="852">Hong Kong (+852)</option>
-            <option value="81">Japan (+81)</option>
-            <option value="82">South Korea (+82)</option>
-            <option value="966">Saudi Arabia (+966)</option>
-            <option value="971">United Arab Emirates (+971)</option>
-            <option value="61">Australia (+61)</option>
-            <option value="64">New Zealand (+64)</option>
-            <option value="44">United Kingdom (+44)</option>
-            <option value="1">Canada / United States (+1)</option>
-          </select>
-          <input type="tel" name="no_telefon" placeholder="Masukkan nombor telefon bimbit anda..." maxlength="20" required>
-        </div>
-
-        <hr>
-
-        <div class="group">
-          <label class="title">Pernah Join Kelas Free Kami?</label>
-          <label class="radio"><input type="radio" name="pernah_join" value="Tidak Pernah" required> Tidak Pernah</label>
-          <label class="radio"><input type="radio" name="pernah_join" value="Pernah. 1 Kali"> Pernah. 1 Kali</label>
-          <label class="radio"><input type="radio" name="pernah_join" value="Pernah. 2 Kali"> Pernah. 2 Kali</label>
-          <label class="radio"><input type="radio" name="pernah_join" value="Pernah. 3 Kali & Ke Atas"> Pernah. 3 Kali &amp; Ke Atas</label>
-        </div>
-
-        <div class="group">
-          <label class="title">Ada Ilmu Asas Jahit?</label>
-          <label class="radio"><input type="radio" name="ilmu_asas" value="Ya" required> Ya</label>
-          <label class="radio"><input type="radio" name="ilmu_asas" value="Tidak"> Tidak</label>
-        </div>
-
-        <hr>
-
-        <button type="submit">Hantar &rsaquo;</button>
-        <p id="status" class="status" role="alert"></p>
-      </form>
-    </div>
-
+  <div>
+    <h1>Terima kasih!</h1>
+    <p>Pendaftaran anda berjaya. Anda sedang dialihkan ke WhatsApp&hellip;</p>
+    <p><a id="pautan" href="#">Klik di sini jika tidak dialihkan</a></p>
   </div>
-
-  <script>
-  // Simpan pendaftaran ke Google Sheet, kemudian terus ke halaman terima kasih
-  // (halaman itu menghantar Lead ke Pixel dan beralih ke WhatsApp). Tiada e-mel dihantar.
-  (function () {
-    var borang = document.getElementById('borang-daftar');
-    var butang = borang.querySelector('button[type="submit"]');
-    var ruangStatus = document.getElementById('status');
-
-    // Alamat Google Apps Script untuk simpan pendaftaran dalam Google Sheet.
-    // Tampal alamat (berakhir /exec) di antara tanda petikan. Jika belum sedia, biarkan seperti ini.
-    var URL_SHEET = "URL_APPS_SCRIPT_ANDA";
-
-    function hantarSheet(data) {
-      var url = String(URL_SHEET).trim();
-      if (url.indexOf('https://script.google.com/') !== 0) {
-        console.warn('URL_SHEET belum diisi dengan betul. Data tidak disimpan ke Google Sheet.');
-        return Promise.resolve();
-      }
-      var hantar = fetch(url, {
-        method: 'POST',
-        mode: 'no-cors',
-        keepalive: true,
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
-      }).catch(function (err) { console.error('Gagal hantar ke Google Sheet:', err); });
-      var had = new Promise(function (selesai) { setTimeout(selesai, 5000); });
-      return Promise.race([hantar, had]);
-    }
-
-    borang.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var data = Object.fromEntries(new FormData(borang));
-      if (data.botcheck) return; // perangkap bot: kotak ini tersembunyi, manusia tidak mengisinya
-
-      butang.disabled = true;
-      butang.textContent = 'Menghantar...';
-      ruangStatus.textContent = '';
-
-      // Tunggu simpanan Sheet siap (maksimum 5 saat), kemudian terus ke halaman terima kasih.
-      // Jika simpanan gagal, pendaftar tetap diteruskan ke WhatsApp.
-      function teruskan() { window.location.href = 'terima-kasih.html'; }
-      try {
-        hantarSheet(data).then(teruskan, teruskan);
-      } catch (err) {
-        console.error(err);
-        teruskan();
-      }
-    });
-  })();
-  </script>
 </body>
 </html>
