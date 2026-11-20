@@ -80,9 +80,7 @@
 
     <!-- Borang -->
     <div class="card" id="borang">
-      <form id="borang-daftar" class="form-body" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="1f069427-a57f-4239-970e-dcc256463316">
-        <input type="hidden" name="subject" value="Pendaftaran Kelas Jahit Langsir">
+      <form id="borang-daftar" class="form-body" method="post" action="#">
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
 
         <div class="alert"><b>Perhatian!</b> Sila lengkapkan borang di bawah.</div>
@@ -149,17 +147,16 @@
   </div>
 
   <script>
-  // Hantar borang ke Web3Forms tanpa meninggalkan halaman, kemudian terus ke
-  // halaman terima kasih (halaman itu menghantar Lead ke Pixel dan beralih ke WhatsApp).
+  // Simpan pendaftaran ke Google Sheet, kemudian terus ke halaman terima kasih
+  // (halaman itu menghantar Lead ke Pixel dan beralih ke WhatsApp). Tiada e-mel dihantar.
   (function () {
     var borang = document.getElementById('borang-daftar');
     var butang = borang.querySelector('button[type="submit"]');
     var ruangStatus = document.getElementById('status');
-    var teksAsal = butang.innerHTML;
 
     // Alamat Google Apps Script untuk simpan pendaftaran dalam Google Sheet.
     // Tampal alamat (berakhir /exec) di antara tanda petikan. Jika belum sedia, biarkan seperti ini.
-    var URL_SHEET = "https://script.google.com/macros/s/AKfycbxLXIrbmg3Mj-RuwZ_ruiHJK8HVCUT6FpvjpOmxxTKDWILaISOidgqK0CF0AXm3Zo7I/exec";
+    var URL_SHEET = "URL_APPS_SCRIPT_ANDA";
 
     function hantarSheet(data) {
       var url = String(URL_SHEET).trim();
@@ -167,15 +164,12 @@
         console.warn('URL_SHEET belum diisi dengan betul. Data tidak disimpan ke Google Sheet.');
         return Promise.resolve();
       }
-      var salinan = Object.assign({}, data);
-      delete salinan.access_key;
-      delete salinan.botcheck;
       var hantar = fetch(url, {
         method: 'POST',
         mode: 'no-cors',
         keepalive: true,
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(salinan)
+        body: JSON.stringify(data)
       }).catch(function (err) { console.error('Gagal hantar ke Google Sheet:', err); });
       var had = new Promise(function (selesai) { setTimeout(selesai, 5000); });
       return Promise.race([hantar, had]);
@@ -183,35 +177,22 @@
 
     borang.addEventListener('submit', function (e) {
       e.preventDefault();
+      var data = Object.fromEntries(new FormData(borang));
+      if (data.botcheck) return; // perangkap bot: kotak ini tersembunyi, manusia tidak mengisinya
+
       butang.disabled = true;
       butang.textContent = 'Menghantar...';
       ruangStatus.textContent = '';
 
-      var data = Object.fromEntries(new FormData(borang));
-      var simpan = hantarSheet(data); // berjalan serentak dengan Web3Forms
-
-      fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(data)
-      })
-        .then(function (res) { return res.json(); })
-        .then(function (hasil) {
-          if (hasil && hasil.success) {
-            // tunggu simpanan Sheet siap (maksimum 5 saat) sebelum tinggalkan halaman
-            return simpan.then(function () { window.location.href = 'terima-kasih.html'; });
-          } else {
-            throw new Error((hasil && (hasil.message || (hasil.body && hasil.body.message) || hasil.error)) || 'Ralat tidak diketahui');
-          }
-        })
-        .catch(function (err) {
-          var sebab = (err && err.name === 'TypeError')
-            ? 'Sambungan gagal. Semak internet anda'
-            : ((err && err.message) || 'Ralat tidak diketahui');
-          ruangStatus.textContent = 'Maaf, borang tidak berjaya dihantar (' + sebab + '). Sila cuba lagi.';
-          butang.disabled = false;
-          butang.innerHTML = teksAsal;
-        });
+      // Tunggu simpanan Sheet siap (maksimum 5 saat), kemudian terus ke halaman terima kasih.
+      // Jika simpanan gagal, pendaftar tetap diteruskan ke WhatsApp.
+      function teruskan() { window.location.href = 'terima-kasih.html'; }
+      try {
+        hantarSheet(data).then(teruskan, teruskan);
+      } catch (err) {
+        console.error(err);
+        teruskan();
+      }
     });
   })();
   </script>
